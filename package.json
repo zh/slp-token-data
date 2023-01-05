@@ -1,0 +1,53 @@
+{
+  "name": "slp-token-data",
+  "version": "1.0.1",
+  "description": "A library for retrieving SLP token icons and media from the document URL",
+  "main": "src/slp-token-data.js",
+  "scripts": {
+    "lint": "eslint src/",
+    "test": "nyc mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zh/slp-token-data.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "bitcoin cash",
+    "wallet",
+    "javascript",
+    "cryptocurrency",
+    "react",
+    "front end",
+    "client",
+    "slp",
+    "tokens"
+  ],
+  "author": "Stoyan Zhekov <zh@zhware.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zh/slp-token-data/issues"
+  },
+  "homepage": "https://github.com/zh/slp-token-data#readme",
+  "dependencies": {
+    "@chris.troutner/retry-queue-commonjs": "1.0.8",
+    "axios": "0.27.2",
+    "buffer": "^6.0.3",
+    "pouns-sdk": "^1.0.2",
+    "slp-mutable-data": "2.3.10"
+  },
+  "devDependencies": {
+    "chai": "4.3.7",
+    "eslint-plugin-prettier": "^4.2.1",
+    "minimal-ecash-wallet": "1.1.6",
+    "minimal-slp-wallet": "5.5.4",
+    "mocha": "10.2.0",
+    "nyc": "15.1.0"
+  },
+  "nyc": {
+    "include": [
+      "src"
+    ],
+    "all": true
+  }
+}
