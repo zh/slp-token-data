@@ -40,7 +40,7 @@ const processHTTP = async (url) => {
 }
 
 const processIPFS = async (cid, config) => {
-  const fullUrl = `https://${cid}.${config.gateway || IPFS}$/data.json`
+  const fullUrl = `https://${cid}.${config.gateway || IPFS}/data.json`
   try {
     const result = await axios.get(fullUrl)
     if (result.headers['content-type'].startsWith('image/'))
