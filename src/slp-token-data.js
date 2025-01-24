@@ -72,7 +72,7 @@ const processPSF = async (config) => {
   const tokenData = await wallet.getTokenData(token.tokenId)
   if (tokenData.mutableData && tokenData.mutableData.includes('ipfs://')) {
     const cid = tokenData.mutableData.substring(7)
-    const fullUrl = `https://${cid}.ipfs.dweb.link/data.json`
+    const fullUrl = `https://${cid}.${config.gateway || IPFS}/data.json`
     const result = await axios.get(fullUrl)
     if (result && result.data && result.data.tokenIcon)
       return { icon: result.data.tokenIcon, download: true }
@@ -81,7 +81,7 @@ const processPSF = async (config) => {
 }
 
 const processLegacy = async (config) => {
-  const url = `https://tokens.bch.sx/128/${config.token.tokenId}.png`
+  const url = `https://tokens.bch.sx/${config.size}/${config.token.tokenId}.png`
   return processHTTP(url)
 }
 
