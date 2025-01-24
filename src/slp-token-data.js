@@ -82,7 +82,7 @@ const processPSF = async (config) => {
 }
 
 const processLegacy = async (config) => {
-  const url = `https://tokens.bch.sx/100/${config.token.tokenId}.png`
+  const url = `https://tokens.bch.sx/128/${config.token.tokenId}.png`
   return processHTTP(url)
 }
 
