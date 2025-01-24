@@ -2,7 +2,7 @@ const axios = require('axios')
 const { Buffer } = require('buffer')
 const { getContracts, generatePoun } = require('pouns-sdk')
 
-const IPFS = 'https://gateway.ipfscdn.io/ipfs/'
+const IPFS = 'ipfs.w3s.link'
 const JUUNGLE = 'https://www.juungle.net/api/v1/nfts/icon'
 
 // config = { wallet, token, size }
@@ -14,7 +14,6 @@ const getMedia = async (url, config = {}) => {
       return processPouns(url.substring(8), config)
     // standard handlers
     const tokenURL = new URL(url)
-    // console.log('URL: ', tokenURL)
     if (tokenURL.protocol === 'ipfs:')
       return processIPFS(url.substring(7), config)
     if (tokenURL.protocol === 'http:' || tokenURL.protocol === 'https:')
@@ -41,7 +40,7 @@ const processHTTP = async (url) => {
 }
 
 const processIPFS = async (cid, config) => {
-  const fullUrl = `${IPFS}${cid}`
+  const fullUrl = `https://${cid}.${config.gateway || IPFS}$/data.json`
   try {
     const result = await axios.get(fullUrl)
     if (result.headers['content-type'].startsWith('image/'))

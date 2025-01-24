@@ -3,6 +3,8 @@ node_modules/*
 
 coverage/
 
+*.tgz
+
 dist/*
 examples.local/
 .env
