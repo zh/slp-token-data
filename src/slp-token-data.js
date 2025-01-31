@@ -5,6 +5,36 @@ const { getContracts, generatePoun } = require('pouns-sdk')
 const IPFS = 'ipfs.w3s.link'
 const JUUNGLE = 'https://www.juungle.net/api/v1/nfts/icon'
 
+const allGateways = (cid) => {
+  return [
+    `https://${cid}.ipfs.w3s.link`,
+    `https://files.tokentiger.com/ipfs/view/${cid}`
+  ]
+};
+
+const getIPFSdata = async (cid, gateways) => {
+  for (const gateway of gateways) {
+    try {
+      const url = `${gateway}/data.json`
+      console.log(`ipfs gateway: ${url}`)
+      const result = await axios.get(url, {
+        timeout: 10000, // Set timeout to 10 seconds
+      })
+      if (result.status === 200 && result.data) {
+        if (result.headers['content-type'].startsWith('image/'))
+          return { icon: url, download: true }
+        if (result.data.tokenIcon)
+          return { icon: result.data.tokenIcon, download: true }
+        return { gateway: url }
+      }
+    } catch (_) {
+      console.log('get IPFS error.')
+    }
+  }
+  throw new Error('All gateways failed.');
+
+}
+
 // config = { wallet, token, size }
 
 const getMedia = async (url, config = {}) => {
@@ -40,15 +70,17 @@ const processHTTP = async (url) => {
 }
 
 const processIPFS = async (cid, config) => {
-  const fullUrl = `https://${cid}.${config.gateway || IPFS}/data.json`
-  try {
-    const result = await axios.get(fullUrl)
-    if (result.headers['content-type'].startsWith('image/'))
-      return { icon: fullUrl, download: true }
-    return processPSF(config)
-  } catch (_) {
-    return null
+  let gatewayURLs = []
+  if (config.gateway) {
+    gatewayURLs = [config.gateway]
+  } else {
+    gatewayURLs = allGateways(cid)
   }
+  const result = await getIPFSdata(cid, gatewayURLs)
+  // if (result.icon) return result // image URL resolved
+  const localConfig = config
+  if (result.gateway) localConfig.gateway = result.gateway
+  return processPSF(localConfig)
 }
 
 // accept config.size
@@ -69,13 +101,19 @@ const processPouns = async (url, config) => {
 
 const processPSF = async (config) => {
   const { token, wallet } = config
+  let gatewayURLs = []
+  if (config.gateway) {
+    gatewayURLs = [config.gateway]
+  } else {
+    gatewayURLs = allGateways(cid)
+  }
   const tokenData = await wallet.getTokenData(token.tokenId)
-  if (tokenData.mutableData && tokenData.mutableData.includes('ipfs://')) {
+  console.log('ipfs: ', JSON.stringify(result.data, null, 2))
+  if (tokenData.mutableData && tokenData.mutableData.startsWith('ipfs://')) {
     const cid = tokenData.mutableData.substring(7)
-    const fullUrl = `https://${cid}.${config.gateway || IPFS}/data.json`
-    const result = await axios.get(fullUrl)
-    if (result && result.data && result.data.tokenIcon)
-      return { icon: result.data.tokenIcon, download: true }
+    const result = await getIPFSdata(cid, gatewayURLs)
+    if (result && result.icon)
+      return { icon: result.icon, download: true }
   }
   return null
 }
