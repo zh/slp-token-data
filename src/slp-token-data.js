@@ -23,6 +23,7 @@ const getIPFSdata = async (cid, gateways) => {
       if (result.status === 200 && result.data) {
         if (result.headers['content-type'].startsWith('image/'))
           return { icon: url, download: true }
+        console.log('ipfs data: ', result.data)
         if (result.data.tokenIcon)
           return { icon: result.data.tokenIcon, download: true }
         return { gateway: gateway }
