@@ -26,6 +26,8 @@ const getIPFSdata = async (cid, gateways) => {
         console.log('ipfs data: ', result.data)
         if (result.data.tokenIcon)
           return { icon: result.data.tokenIcon, download: true }
+        if (result.data.schema && result.data.schema.startsWith('ps0'))
+          return { gateway: gateway, schema: 'psf' }
         return { gateway: gateway }
       }
     } catch (_) {
@@ -80,7 +82,9 @@ const processIPFS = async (cid, config) => {
   // if (result.icon) return result // image URL resolved
   const localConfig = config
   if (result.gateway) localConfig.gateway = result.gateway
-  return processPSF(localConfig)
+  if (result.schema && result.schema === 'psf')
+    return processPSF(localConfig)
+  return result
 }
 
 // accept config.size
@@ -109,7 +113,6 @@ const processPSF = async (config) => {
   }
   const tokenData = await wallet.getTokenData(token.tokenId)
   if (tokenData.mutableData && tokenData.mutableData.startsWith('ipfs://')) {
-    console.log('token muttable: ', JSON.stringify(tokenData, null, 2))
     const cid = tokenData.mutableData.substring(7)
     const result = await getIPFSdata(cid, gatewayURLs)
     console.log('muttable data: ', JSON.stringify(result, null, 2))
