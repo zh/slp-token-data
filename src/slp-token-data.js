@@ -32,7 +32,6 @@ const getIPFSdata = async (cid, gateways) => {
     }
   }
   throw new Error('All gateways failed.');
-
 }
 
 // config = { wallet, token, size }
@@ -108,7 +107,7 @@ const processPSF = async (config) => {
     gatewayURLs = allGateways(cid)
   }
   const tokenData = await wallet.getTokenData(token.tokenId)
-  console.log('ipfs: ', JSON.stringify(result.data, null, 2))
+  console.log('token: ', JSON.stringify(tokenData, null, 2))
   if (tokenData.mutableData && tokenData.mutableData.startsWith('ipfs://')) {
     const cid = tokenData.mutableData.substring(7)
     const result = await getIPFSdata(cid, gatewayURLs)
