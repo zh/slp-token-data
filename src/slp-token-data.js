@@ -107,10 +107,11 @@ const processPSF = async (config) => {
     gatewayURLs = allGateways(cid)
   }
   const tokenData = await wallet.getTokenData(token.tokenId)
-  console.log('token: ', JSON.stringify(tokenData, null, 2))
   if (tokenData.mutableData && tokenData.mutableData.startsWith('ipfs://')) {
+    console.log('token muttable: ', JSON.stringify(tokenData, null, 2))
     const cid = tokenData.mutableData.substring(7)
     const result = await getIPFSdata(cid, gatewayURLs)
+    console.log('muttable data: ', JSON.stringify(result, null, 2))
     if (result && result.icon)
       return { icon: result.icon, download: true }
   }
