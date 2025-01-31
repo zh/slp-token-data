@@ -25,7 +25,7 @@ const getIPFSdata = async (cid, gateways) => {
           return { icon: url, download: true }
         if (result.data.tokenIcon)
           return { icon: result.data.tokenIcon, download: true }
-        return { gateway: url }
+        return { gateway: gateway }
       }
     } catch (_) {
       console.log('get IPFS error.')
